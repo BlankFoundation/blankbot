@@ -51,7 +51,8 @@ client.on('interactionCreate', async interaction => {
     records.forEach(function (record) {
       console.log(record.getId());
     });
-  });}
+  });
+  await interaction.reply({ content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName});}
 });
     
 // client.login logs the bot in and sets it up for use. You'll enter your token here.
