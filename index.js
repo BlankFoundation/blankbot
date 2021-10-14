@@ -46,7 +46,7 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: 'Pong!'});
   } else if (interaction.commandName === 'whitelist') {
     console.log(interaction);
-    if interaction.member.roles.some(role => role.name === "member") {
+    if (interaction.member.roles.some(role => role.name === "member")) {
       const discordUserName = interaction.user.username;
       const discordUserId = interaction.user.id;
       const walletAddress = interaction.options.getString('address');
