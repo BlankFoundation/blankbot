@@ -12,39 +12,9 @@ const client = new Client({
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 })
-    
-// Register an event to handle incoming messages
-client.on('message', async msg => {
-  // This block will prevent the bot from responding to itself and other bots
-  if(msg.author.bot) {
-    return
-  }
-    
-  // Check if the message starts with '!hello' and respond with 'world!' if it does.
-  if(msg.content.startsWith("!hello")) {
-    msg.reply("world!")
-  }
-})
 
-//function discordUserIdExistsInDB(value) {
-//  const recordsExist = false;
-//  database('Whitelist').select({
-//    filterByFormula: "({DiscordUserId} = '" + value + "')"
-//  }).eachPage(function page(records, fetchNextPage) {
-//    if (records) {
-//      console.log('hi');
-//      recordsExist = true;
-//    }
-//    fetchNextPage();
-//  }, function done(error) {
-//    console.log(error);
-//  });
-//  return recordsExist;
-//}
-
-async function discordUserIdExistsInDB(value) {
+async function getDiscordUserIdAddresses(value) {
    let matchingRecords = [];
-   let recordsExist = false;
    await database("WhiteList")
   .select({
     filterByFormula: "({DiscordUserId} = '" + value + "')"
@@ -53,18 +23,13 @@ async function discordUserIdExistsInDB(value) {
     function page(records, fetchNextPage) {
      try {
       records.forEach(function(record) {
-        matchingRecords.push(record.id);
+        matchingRecords.push(record.fields['WalletAddress']);
       });
-      } catch(e){ console.log('error inside eachPage => ',e)}
+      } catch(e){ console.log('error inside eachPage => ', e)}
       fetchNextPage();
-    },
-    function done(err) {
-      if (err) {
-        console.error(err);
-      }
-    }
+     }
   );
-  return (matchingRecords.length > 0);
+  return matchingRecords;
 }
 
 function addRecord(discordUserName, walletAddress, discordUserId) {
@@ -94,16 +59,16 @@ client.on('interactionCreate', async interaction => {
       const discordUserName = interaction.user.username;
       const discordUserId = interaction.user.id;
       const walletAddress = interaction.options.getString('address');
-      discordUserIdExists = await discordUserIdExistsInDB(discordUserId);
-      console.log(interaction);
-      if (discordUserIdExists) {
+      discordUserIdAddresses = await getDiscordUserIdAddresses(discordUserId);
+      //console.log(interaction);
+      if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
         addRecord(discordUserName, walletAddress, discordUserId);
         await interaction.reply(
           { content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName,
           ephemeral: true});
       } else {
         await interaction.reply(
-        { content: 'Wallet address already exists for member ' + discordUserName + '. Please contact a member of our moderation team to handle this issue!',
+        { content: 'Wallet address ' + discordUserIdAddresses[0] + ' already exists for member ' + discordUserName + '. Please contact a member of our moderation team to handle this issue!',
           ephemeral: true});
       }
     } else {
