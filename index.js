@@ -1,4 +1,7 @@
-const { airtableKey, airtableId, discordToken } = require('./config.json');
+//const { ethers } = require("hardhat");
+
+const { airtableKey, airtableId, discordToken, contractAddress, foundationKey } = require('./config.json');
+//const { LazyMinter } = require('../lib');
 
 // Import discord.js and create the client
 const { Client, Intents } = require('discord.js')
@@ -32,13 +35,14 @@ async function getDiscordUserIdAddresses(value) {
   return matchingRecords;
 }
 
-function addRecord(discordUserName, walletAddress, discordUserId) {
+function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
   database("Whitelist").create([
     {
       "fields": {
         "DiscordUserName": discordUserName,
         "WalletAddress": walletAddress,
-        "DiscordUserId": discordUserId
+        "DiscordUserId": discordUserId,
+        "Voucher": voucher
        }
     }], function(err, records) {
     if (err) {
@@ -46,6 +50,13 @@ function addRecord(discordUserName, walletAddress, discordUserId) {
       return;
     }
   });
+}
+
+async function createVoucher(walletAddress) {
+  //todo test & add in real env vars
+  const lazyMinter = new LazyMinter({ contractAddress, signer: foundationKey })
+  const voucher = await lazyMinter.createVoucher(walletAddress);
+  return voucher;
 }
 
 
@@ -62,7 +73,10 @@ client.on('interactionCreate', async interaction => {
       discordUserIdAddresses = await getDiscordUserIdAddresses(discordUserId);
       //console.log(interaction);
       if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
-        addRecord(discordUserName, walletAddress, discordUserId);
+        // todo add this back in
+        //voucher = createVoucher(walletAddress);
+        voucher = 'fakeVoucher';
+        addRecord(discordUserName, walletAddress, discordUserId, voucher);
         await interaction.reply(
           { content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName,
           ephemeral: true});
