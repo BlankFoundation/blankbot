@@ -1,15 +1,31 @@
-//const { ethers } = require("hardhat");
+const { 
+  network,
+  infuraProjectId,
+  infuraProjectSecret,
+  airtableKey, 
+  airtableId, 
+  discordToken, 
+  foundationKey
+} = require('./config.json');
+const { BlankArt } = require('./lib/BlankArt');
+const { LazyMinter } = require('./lib/LazyMinter');
 
-const { airtableKey, airtableId, discordToken, contractAddress, foundationKey } = require('./config.json');
-//const { LazyMinter } = require('../lib');
-
-// Import discord.js and create the client
+const { ethers } = require('ethers')
 const { Client, Intents } = require('discord.js')
 var Airtable = require('airtable');
-var database = new Airtable({apiKey: airtableKey}).base(airtableId);
+
+const database = new Airtable({apiKey: airtableKey}).base(airtableId);
 const client = new Client({ 
   intents: [Intents.FLAGS.GUILDS]
- });
+});
+const provider = new ethers.providers.InfuraProvider(network, {
+  projectId: infuraProjectId,
+  projectSecret: infuraProjectSecret
+});
+const signer = new ethers.Wallet(foundationKey, provider)
+const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
+const lazyMinter = new LazyMinter({ contract, signer })
+
     
 // Register an event so that when the bot is ready, it will log a messsage to the terminal
 client.on('ready', () => {
@@ -52,14 +68,6 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
   });
 }
 
-async function createVoucher(walletAddress) {
-  //todo test & add in real env vars
-  const lazyMinter = new LazyMinter({ contractAddress, signer: foundationKey })
-  const voucher = await lazyMinter.createVoucher(walletAddress);
-  return voucher;
-}
-
-
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
@@ -73,10 +81,8 @@ client.on('interactionCreate', async interaction => {
       discordUserIdAddresses = await getDiscordUserIdAddresses(discordUserId);
       //console.log(interaction);
       if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
-        // todo add this back in
-        //voucher = createVoucher(walletAddress);
-        voucher = 'fakeVoucher';
-        addRecord(discordUserName, walletAddress, discordUserId, voucher);
+        const voucher = await lazyMinter.createVoucher(walletAddress);
+        addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
         await interaction.reply(
           { content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName,
           ephemeral: true});
