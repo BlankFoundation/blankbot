@@ -89,8 +89,13 @@ client.on('interactionCreate', async interaction => {
               ephemeral: true});
         } catch (error) {
           console.log(error);
+          if (error.code && (error.code == 'INVALID_ARGUMENT')) {
+            errorMessage = 'Wallet address ' + walletAddress + ' invalid -- do you have a typo?';
+          } else {
+            errorMessage = error.message;
+          }
           await interaction.reply(
-            { content: "Error: " + error.message,
+            { content: "Error: " + errorMessage,
               ephemeral: true});
         }
       } else {
