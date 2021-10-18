@@ -81,11 +81,18 @@ client.on('interactionCreate', async interaction => {
       discordUserIdAddresses = await getDiscordUserIdAddresses(discordUserId);
       //console.log(interaction);
       if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
-        const voucher = await lazyMinter.createVoucher(walletAddress);
-        addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
-        await interaction.reply(
-          { content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName,
-          ephemeral: true});
+        try {
+          const voucher = await lazyMinter.createVoucher(walletAddress);
+          addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
+          await interaction.reply(
+            { content: 'Wallet address ' + walletAddress + ' added for member ' + discordUserName,
+              ephemeral: true});
+        } catch (error) {
+          console.log(error);
+          await interaction.reply(
+            { content: "Error: " + error.message,
+              ephemeral: true});
+        }
       } else {
         await interaction.reply(
         { content: 'Wallet address ' + discordUserIdAddresses[0] + ' already exists for member ' + discordUserName + '. Please contact a member of our moderation team to handle this issue!',
