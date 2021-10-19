@@ -5,7 +5,7 @@ const {
   airtableKey, 
   airtableId, 
   discordToken, 
-  foundationKey
+  foundationPrivateKey
 } = require('./config.json');
 const { BlankArt } = require('./lib/BlankArt');
 const { LazyMinter } = require('./lib/LazyMinter');
@@ -22,7 +22,7 @@ const provider = new ethers.providers.InfuraProvider(network, {
   projectId: infuraProjectId,
   projectSecret: infuraProjectSecret
 });
-const signer = new ethers.Wallet(foundationKey, provider)
+const signer = new ethers.Wallet(foundationPrivateKey, provider)
 const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
 const lazyMinter = new LazyMinter({ contract, signer })
 
