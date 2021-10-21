@@ -16,7 +16,8 @@ var Airtable = require('airtable');
 
 const database = new Airtable({apiKey: airtableKey}).base(airtableId);
 const client = new Client({ 
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,
+            Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
   partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 const provider = new ethers.providers.InfuraProvider(network, {
@@ -90,12 +91,24 @@ client.on('messageReactionAdd', async (reaction, user) => {
     let reactionThresholdPassed = async (reaction) => {
         let memberIds = new Set();
         let uniqueMemberReactions = 0;
-        reaction.message.reactions.cache.each(function(reaction) {
+        await reaction.message.reactions.cache.reduce(async function(newReaction) {
           let uniqueReaction = false;
-          reaction.users.cache.each(function(user) {
+          console.log(' new reaction');
+          console.log(newReaction);
+          try {
+            newUsers = await newReaction.users.fetch();
+          } catch (e) {
+            let msg = await reaction.message.fetch().then( res => {
+                newUsers = res.users.fetch(); }
+              );
+            ;
+          }
+
+          console.log('new users');
+          console.log(newUsers);
+          await newReaction.users.cache.each(async function(user) {
             // only add member reactions
-            if (user.roles.cache.some(role => role.name === "member")) {
-              console.log('user is member');
+            if (reaction.message.member.roles.cache.some(role => role.name === "member")) {
               if (!memberIds.has(user.id)) {
                 uniqueReaction = true;
               }
@@ -107,17 +120,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
               uniqueMemberReactions++;
             }
           });
+          console.log('unique member reactions');
+          console.log(uniqueMemberReactions);
+          return uniqueMemberReactions;
         });
-        if (uniqueMemberReactions >= 5) {
-            return true;
-        }
-        console.log('unique member reactions');
+        console.log('unique memberreacitons vfinal');
         console.log(uniqueMemberReactions);
-
       }
 
       let handleApplication = async (reaction) => {
-        whetherToHandle = reactionThresholdPassed(reaction);
+        whetherToHandle = await reactionThresholdPassed(reaction);
         if (whetherToHandle) {
           // send message to #moderators channel with notification to approve application
         }
@@ -127,7 +139,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
             let msg = await reaction.message.fetch();
             console.log(msg.id);
             console.log("Cached - Applied");
-            handleApplication(reaction);
+            await handleApplication(reaction);
         }
         catch (err) {
             console.log(err);
@@ -136,7 +148,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     else {
         console.log("Not a Partial");
         console.log("Not a Partial - applied")
-        handleApplication(reaction);
+        await handleApplication(reaction);
     }
 });
 
