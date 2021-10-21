@@ -71,19 +71,13 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
 }
 
 APPLICATION_CHANNEL = 'applications';
+APPLICATION_CHANNEL_ID = '868954492626944060';
 MODERATOR_CHANNEL = 'application-review';
 MODERATOR_CHANNEL_ID = '900553032536842301';
 
-client.on('messageCreate', message => {
-
-  console.log('i heard a messsage');
-  if (message.channel.name == APPLICATION_CHANNEL) {
-    console.log('i heard a message from my channel');
-  }
-});
-
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (reaction.message.channel.name != APPLICATION_CHANNEL) {
+    if (reaction.message.channel.id != APPLICATION_CHANNEL_ID) {
+      console.log(reaction.message.channel.name);
       console.log('ignoring message');
       return;
     }
@@ -95,22 +89,29 @@ client.on('messageReactionAdd', async (reaction, user) => {
           accumulated.push(newReaction);
           return accumulated;
         }, []);
+        //allMembers = reaction.message.guild.members.fetch().then(members => filter(member.roles.cache.has(role => role.name == 'member')));
+        const memberRole = reaction.message.guild.roles.cache.find(r => r.name === 'member');
+        allMemberIds = await memberRole.members.reduce(function(accumulated, newMember) {
+          accumulated.push(newMember.user.id);
+          return accumulated;
+        }, []);
         for (var i = 0; i < allReactions.length; i++) {
           newReaction = allReactions[i];
           let uniqueReaction = false;
           const newUsers = await newReaction.users.fetch();
-          result2 = await newReaction.users.cache.each(async function(user) {
-            // only add member reactions
-            if (reaction.message.member.roles.cache.some(role => role.name === "member")) {
-              if (!memberIds.has(user.id)) {
-                uniqueReaction = true;
-              }
-              memberIds.add(user.id);
+          console.log(newUsers);
+          for (const [key, user] of newUsers) {
+            // todo: only add member reactions
+            //if (allMemberIds.includes(user.id)) {
+            //  console.log('its a member');
+            if (!memberIds.has(user.id)) {
+              uniqueReaction = true;
             }
-            if (uniqueReaction) {
-              uniqueMemberReactions++;
-            }
-          });
+            memberIds.add(user.id);
+          }
+          if (uniqueReaction) {
+            uniqueMemberReactions++;
+          }
         }
         return uniqueMemberReactions;
       }
@@ -121,9 +122,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
         console.log(whetherToHandle);
         if (whetherToHandle >= 5) {
           // send message to #moderators channel with notification to approve application
-          console.log('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
+          console.log('Applicant ' + reaction.message.author.username + ' is ready for review with ' + whetherToHandle + ' unique emojis!');
           const channel = client.channels.cache.find(channel => channel.name === MODERATOR_CHANNEL);
-          channel.send('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
+          channel.send('Applicant ' + reaction.message.author.username + ' is ready for review with ' + whetherToHandle + ' unique emojis!');
         }
       }
     if (reaction.message.partial) {
