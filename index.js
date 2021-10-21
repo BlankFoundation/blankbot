@@ -16,7 +16,8 @@ var Airtable = require('airtable');
 
 const database = new Airtable({apiKey: airtableKey}).base(airtableId);
 const client = new Client({ 
-  intents: [Intents.FLAGS.GUILDS]
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 const provider = new ethers.providers.InfuraProvider(network, {
   projectId: infuraProjectId,
@@ -67,6 +68,77 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
     }
   });
 }
+
+APPLICATION_CHANNEL = 'bot-test';
+MODERATOR_CHANNEL = 'application-review';
+client.on('messageCreate', message => {
+
+  console.log('i heard a messsage');
+  if (message.channel.name == APPLICATION_CHANNEL) {
+    console.log('i heard a message from my channel');
+  }
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+
+
+    if (reaction.message.channel.name != APPLICATION_CHANNEL) {
+      console.log('ignoring message');
+      return;
+    }
+    console.log("Checking reactions for message");
+    let reactionThresholdPassed = async (reaction) => {
+        let memberIds = new Set();
+        let uniqueMemberReactions = 0;
+        reaction.message.reactions.cache.each(function(reaction) {
+          let uniqueReaction = false;
+          reaction.users.cache.each(function(user) {
+            // only add member reactions
+            if (user.roles.cache.some(role => role.name === "member")) {
+              console.log('user is member');
+              if (!memberIds.has(user.id)) {
+                uniqueReaction = true;
+              }
+              memberIds.add(user.id);
+            }
+            console.log('unique reaction');
+            console.log(uniqueReaction);
+            if (uniqueReaction) {
+              uniqueMemberReactions++;
+            }
+          });
+        });
+        if (uniqueMemberReactions >= 5) {
+            return true;
+        }
+        console.log('unique member reactions');
+        console.log(uniqueMemberReactions);
+
+      }
+
+      let handleApplication = async (reaction) => {
+        whetherToHandle = reactionThresholdPassed(reaction);
+        if (whetherToHandle) {
+          // send message to #moderators channel with notification to approve application
+        }
+      }
+    if (reaction.message.partial) {
+        try {
+            let msg = await reaction.message.fetch();
+            console.log(msg.id);
+            console.log("Cached - Applied");
+            handleApplication(reaction);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    else {
+        console.log("Not a Partial");
+        console.log("Not a Partial - applied")
+        handleApplication(reaction);
+    }
+});
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
