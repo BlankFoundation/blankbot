@@ -16,7 +16,9 @@ var Airtable = require('airtable');
 
 const database = new Airtable({apiKey: airtableKey}).base(airtableId);
 const client = new Client({ 
-  intents: [Intents.FLAGS.GUILDS]
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,
+            Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 const provider = new ethers.providers.InfuraProvider(network, {
   projectId: infuraProjectId,
@@ -67,6 +69,76 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
     }
   });
 }
+
+APPLICATION_CHANNEL = 'applications';
+MODERATOR_CHANNEL = 'application-review';
+MODERATOR_CHANNEL_ID = '900553032536842301';
+
+client.on('messageCreate', message => {
+
+  console.log('i heard a messsage');
+  if (message.channel.name == APPLICATION_CHANNEL) {
+    console.log('i heard a message from my channel');
+  }
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (reaction.message.channel.name != APPLICATION_CHANNEL) {
+      console.log('ignoring message');
+      return;
+    }
+    console.log("Checking reactions for message");
+    let reactionThresholdPassed = async (reaction) => {
+        let memberIds = new Set();
+        let uniqueMemberReactions = 0;
+        allReactions = await reaction.message.reactions.cache.reduce(function(accumulated, newReaction) {
+          accumulated.push(newReaction);
+          return accumulated;
+        }, []);
+        for (var i = 0; i < allReactions.length; i++) {
+          newReaction = allReactions[i];
+          let uniqueReaction = false;
+          const newUsers = await newReaction.users.fetch();
+          result2 = await newReaction.users.cache.each(async function(user) {
+            // only add member reactions
+            if (reaction.message.member.roles.cache.some(role => role.name === "member")) {
+              if (!memberIds.has(user.id)) {
+                uniqueReaction = true;
+              }
+              memberIds.add(user.id);
+            }
+            if (uniqueReaction) {
+              uniqueMemberReactions++;
+            }
+          });
+        }
+        return uniqueMemberReactions;
+      }
+
+      let handleApplication = async (reaction) => {
+        whetherToHandle = await reactionThresholdPassed(reaction);
+        console.log('whether to handle');
+        console.log(whetherToHandle);
+        if (whetherToHandle >= 5) {
+          // send message to #moderators channel with notification to approve application
+          console.log('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
+          const channel = client.channels.cache.find(channel => channel.name === MODERATOR_CHANNEL);
+          channel.send('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
+        }
+      }
+    if (reaction.message.partial) {
+        try {
+            let msg = await reaction.message.fetch();
+            await handleApplication(reaction);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    else {
+        await handleApplication(reaction);
+    }
+});
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
