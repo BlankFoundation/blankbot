@@ -5,7 +5,7 @@ const { clientId, guildId, discordToken } = require('./config.json');
 
 const commands = [
     new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
-    new SlashCommandBuilder().setName('whoami').setDescription('Bot will introduce themselves!')
+    new SlashCommandBuilder().setName('whoami').setDescription('Bot will introduce themselves!'),
     new SlashCommandBuilder()
       .setName('whitelist')
       .setDescription('Adds a wallet address to the whitelist for minting')
