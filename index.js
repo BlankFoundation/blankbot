@@ -120,7 +120,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         whetherToHandle = await reactionThresholdPassed(reaction);
         console.log('whether to handle');
         console.log(whetherToHandle);
-        if (whetherToHandle >= 5) {
+        if (whetherToHandle == 5) {
           // send message to #moderators channel with notification to approve application
           console.log('Applicant ' + reaction.message.author.username + ' is ready for review with ' + whetherToHandle + ' unique emojis!');
           const channel = client.channels.cache.find(channel => channel.name === MODERATOR_CHANNEL);
@@ -146,6 +146,9 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'ping') {
     await interaction.reply({ content: 'Pong!'});
+  } else if (interaction.commandName == 'whoami') {
+    botResponse = "Hello! I am your friendly neighborhood Blank bot. I help review member applications and also help members whitelist their wallet addresses for minting. I also like playing ping pong!"
+    await interaction.reply({ content: botResponse, ephemeral: true});
   } else if (interaction.commandName === 'whitelist') {
     if (interaction.member.roles.cache.some(role => role.name === "member")) {
       const discordUserName = interaction.user.username;
