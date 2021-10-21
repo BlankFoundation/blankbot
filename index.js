@@ -70,8 +70,10 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
   });
 }
 
-APPLICATION_CHANNEL = 'bot-test';
+APPLICATION_CHANNEL = 'applications';
 MODERATOR_CHANNEL = 'application-review';
+MODERATOR_CHANNEL_ID = '900553032536842301';
+
 client.on('messageCreate', message => {
 
   console.log('i heard a messsage');
@@ -81,8 +83,6 @@ client.on('messageCreate', message => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-
-
     if (reaction.message.channel.name != APPLICATION_CHANNEL) {
       console.log('ignoring message');
       return;
@@ -91,22 +91,15 @@ client.on('messageReactionAdd', async (reaction, user) => {
     let reactionThresholdPassed = async (reaction) => {
         let memberIds = new Set();
         let uniqueMemberReactions = 0;
-        await reaction.message.reactions.cache.reduce(async function(newReaction) {
+        allReactions = await reaction.message.reactions.cache.reduce(function(accumulated, newReaction) {
+          accumulated.push(newReaction);
+          return accumulated;
+        }, []);
+        for (var i = 0; i < allReactions.length; i++) {
+          newReaction = allReactions[i];
           let uniqueReaction = false;
-          console.log(' new reaction');
-          console.log(newReaction);
-          try {
-            newUsers = await newReaction.users.fetch();
-          } catch (e) {
-            let msg = await reaction.message.fetch().then( res => {
-                newUsers = res.users.fetch(); }
-              );
-            ;
-          }
-
-          console.log('new users');
-          console.log(newUsers);
-          await newReaction.users.cache.each(async function(user) {
+          const newUsers = await newReaction.users.fetch();
+          result2 = await newReaction.users.cache.each(async function(user) {
             // only add member reactions
             if (reaction.message.member.roles.cache.some(role => role.name === "member")) {
               if (!memberIds.has(user.id)) {
@@ -114,31 +107,28 @@ client.on('messageReactionAdd', async (reaction, user) => {
               }
               memberIds.add(user.id);
             }
-            console.log('unique reaction');
-            console.log(uniqueReaction);
             if (uniqueReaction) {
               uniqueMemberReactions++;
             }
           });
-          console.log('unique member reactions');
-          console.log(uniqueMemberReactions);
-          return uniqueMemberReactions;
-        });
-        console.log('unique memberreacitons vfinal');
-        console.log(uniqueMemberReactions);
+        }
+        return uniqueMemberReactions;
       }
 
       let handleApplication = async (reaction) => {
         whetherToHandle = await reactionThresholdPassed(reaction);
-        if (whetherToHandle) {
+        console.log('whether to handle');
+        console.log(whetherToHandle);
+        if (whetherToHandle >= 5) {
           // send message to #moderators channel with notification to approve application
+          console.log('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
+          const channel = client.channels.cache.find(channel => channel.name === MODERATOR_CHANNEL);
+          channel.send('Applicant ' + reaction.message.author.username + ' is ready for review with 5 member votes!');
         }
       }
     if (reaction.message.partial) {
         try {
             let msg = await reaction.message.fetch();
-            console.log(msg.id);
-            console.log("Cached - Applied");
             await handleApplication(reaction);
         }
         catch (err) {
@@ -146,8 +136,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
         }
     }
     else {
-        console.log("Not a Partial");
-        console.log("Not a Partial - applied")
         await handleApplication(reaction);
     }
 });
