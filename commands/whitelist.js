@@ -20,19 +20,19 @@ const lazyMinter = new LazyMinter({ contract, signer })
 async function getDiscordUserIdAddresses(value) {
   let matchingRecords = [];
   await database("WhiteList")
- .select({
-   filterByFormula: "({DiscordUserId} = '" + value + "')"
- })
- .eachPage(
-   function page(records, fetchNextPage) {
-    try {
-     records.forEach(function(record) {
-       matchingRecords.push(record.fields['WalletAddress']);
-     });
-     } catch(e){ console.log('error inside eachPage => ', e)}
-     fetchNextPage();
-    }
- );
+    .select({
+      filterByFormula: "({DiscordUserId} = '" + value + "')"
+    })
+    .eachPage(
+      function page(records, fetchNextPage) {
+        try {
+        records.forEach(function(record) {
+          matchingRecords.push(record.fields['WalletAddress']);
+        });
+        } catch(e){ console.log('error inside eachPage => ', e)}
+        fetchNextPage();
+        }
+    );
  return matchingRecords;
 }
 
@@ -63,7 +63,7 @@ const whitelist = async (interaction) => {
     if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
       try {
         const voucher = await lazyMinter.createVoucher(walletAddress);
-        addRecord(discordUserName, walletAddress, config.discordUserId, JSON.stringify(voucher));
+        addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
         
         const content = `Wallet address ${walletAddress} added for member ${discordUserName}
           
