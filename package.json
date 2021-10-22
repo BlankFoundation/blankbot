@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.mjs"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +20,8 @@
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
     "ethers": "^5.4.7"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1"
   }
 }
