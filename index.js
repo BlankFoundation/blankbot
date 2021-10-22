@@ -25,7 +25,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
     console.log("Checking reactions for message");
     try {
-        await handleApplication(reaction);
+        await handleApplication(client, reaction);
     }
     catch (err) {
         console.log(err);
