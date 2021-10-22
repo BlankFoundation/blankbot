@@ -12,5 +12,9 @@ export default {
   "applicationChannelId": '868954492626944060',
   "moderatorChannel": 'application-review',
   "moderatorChannelId": '900553032536842301',
+  // "applicationChannel": 'bot-test',
+  // "applicationChannelId": '897532024980643850',
+  // "moderatorChannel": 'bot-test',
+  // "moderatorChannelId": '897532024980643850',
   "mintingUrl": "https://blank.foundation/mint"
 }
