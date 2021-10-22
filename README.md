@@ -1,7 +1,3 @@
-# Gotchas
-
-Be sure contract address is up-to-date on Infura
-
 # Install
 
 - Clone this repository
@@ -10,3 +6,7 @@ Be sure contract address is up-to-date on Infura
 # Running locally
 
 node index.js
+
+# Running tests
+
+npm run test

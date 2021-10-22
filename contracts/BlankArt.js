@@ -655,6 +655,4 @@ const BlankArt = {
   ]
 };
 
-module.exports = {
-  BlankArt
-};
+export default BlankArt;
