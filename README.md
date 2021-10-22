@@ -6,3 +6,7 @@
 # Running locally
 
 node index.js
+
+# Running tests
+
+npm run test
