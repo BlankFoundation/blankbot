@@ -9,8 +9,8 @@ export default {
   "airtableId": "test",
   "foundationPrivateKey": "test",
   "applicationChannel": 'bot-test',
-  "applicationChannelId": '897532024980643850',
+  "applicationChannelId": 'test',
   "moderatorChannel": 'bot-test',
-  "moderatorChannelId": '897532024980643850',
+  "moderatorChannelId": 'test',
   "mintingUrl": "https://blank.foundation/mint"
 }
