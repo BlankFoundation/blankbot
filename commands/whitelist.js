@@ -13,9 +13,10 @@ const provider = new ethers.providers.InfuraProvider(config.network, {
   projectId: config.infuraProjectId,
   projectSecret: config.infuraProjectSecret
 });
-const signer = new ethers.Wallet(config.foundationPrivateKey, provider)
+const signer = new ethers.Wallet(config.foundationPrivateKey, provider);
 const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
-const lazyMinter = new LazyMinter({ contract, signer })
+const lazyMinter = new LazyMinter({ contract, signer });
+const MAX_WHITELIST_MEMBERS = 1000;
 
 async function getDiscordUserIdAddresses(value) {
   let matchingRecords = [];
@@ -34,6 +35,23 @@ async function getDiscordUserIdAddresses(value) {
         }
     );
  return matchingRecords;
+}
+
+async function countWalletAddresses() {
+  let count = 0;
+  await database("WhiteList")
+    .select()
+    .eachPage(
+      function page(records, fetchNextPage) {
+        try {
+        records.forEach(function(record) {
+          count += 1;
+        });
+        } catch(e){ console.log('error inside eachPage => ', e)}
+        fetchNextPage();
+        }
+    );
+ return count;
 }
 
 function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
@@ -62,27 +80,34 @@ const whitelist = async (interaction) => {
     //console.log(interaction);
     if (!discordUserIdAddresses || (discordUserIdAddresses.length == 0)) {
       try {
-        const voucher = await lazyMinter.createVoucher(walletAddress);
-        addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
+        // check if whitelist already has max members
+        const totalAddresses = await countWalletAddresses();
+        if (totalAddresses >= MAX_WHITELIST_MEMBERS) {
+          await interaction.reply(
+          { content: "The whitelist is full with 1,000 addresses. The community treasury will decide what to do with the remaining blank NFTs. Your participation matters!",
+            ephemeral: true});
+        } else {
+          const voucher = await lazyMinter.createVoucher(walletAddress);
+          addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
         
-        const content = `Wallet address ${walletAddress} added for member ${discordUserName}
+          const content = `Wallet address ${walletAddress} added for member ${discordUserName}
           
 Now go mint your BlankArt NFT!`
 
-        const row = new MessageActionRow()
-          .addComponents(
-            new MessageButton()
-              .setURL(config.mintingUrl)
-              .setLabel('Mint!')
-              .setStyle('LINK'),
-          );
+          const row = new MessageActionRow()
+            .addComponents(
+              new MessageButton()
+                .setURL(config.mintingUrl)
+                .setLabel('Mint!')
+                .setStyle('LINK'),
+            );
 
-        await interaction.reply({ 
-          content: content,
-          components: [row],
-          ephemeral: true
-        });
-
+          await interaction.reply({
+            content: content,
+            components: [row],
+            ephemeral: true
+          });
+          }
       } catch (error) {
         console.log(error);
         if (error.code && (error.code == 'INVALID_ARGUMENT')) {
