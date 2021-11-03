@@ -1,6 +1,6 @@
 const BlankArt = {
   network: "ropsten",
-  address: "0x8F1d256707420eBc860Dc07ed32Ba88b4198aE84",
+  address: "0x01A257a597e16ab0434b857003C87a1d164Fa192",
   abi: [
     {
       "type": "constructor",
@@ -187,6 +187,19 @@ const BlankArt = {
         }
       ],
       "anonymous": false
+    },
+    {
+      "name": "active",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
     },
     {
       "name": "addBaseURI",
@@ -404,8 +417,8 @@ const BlankArt = {
       "outputs": [
         {
           "name": "",
-          "type": "uint256[5]",
-          "internalType": "uint256[5]"
+          "type": "uint256[]",
+          "internalType": "uint256[]"
         }
       ],
       "stateMutability": "payable"
@@ -487,9 +500,19 @@ const BlankArt = {
               "internalType": "address"
             },
             {
+              "name": "expiration",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
               "name": "minPrice",
               "type": "uint256",
               "internalType": "uint256"
+            },
+            {
+              "name": "tokenCount",
+              "type": "uint16",
+              "internalType": "uint16"
             },
             {
               "name": "signature",
@@ -503,8 +526,8 @@ const BlankArt = {
       "outputs": [
         {
           "name": "",
-          "type": "uint256[5]",
-          "internalType": "uint256[5]"
+          "type": "uint256[]",
+          "internalType": "uint256[]"
         }
       ],
       "stateMutability": "payable"
@@ -611,6 +634,13 @@ const BlankArt = {
       "stateMutability": "view"
     },
     {
+      "name": "toggleActivation",
+      "type": "function",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
       "name": "togglePublicMint",
       "type": "function",
       "inputs": [],
@@ -699,6 +729,19 @@ const BlankArt = {
           "name": "newFoundationAddress",
           "type": "address",
           "internalType": "address payable"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "updateMaxMintCount",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "_maxMint",
+          "type": "uint8",
+          "internalType": "uint8"
         }
       ],
       "outputs": [],

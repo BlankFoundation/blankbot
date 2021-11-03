@@ -87,7 +87,10 @@ const whitelist = async (interaction) => {
           { content: "The whitelist is full with 1,000 addresses. The community treasury will decide what to do with the remaining blank NFTs. Your participation matters!",
             ephemeral: true});
         } else {
-          const voucher = await lazyMinter.createVoucher(walletAddress);
+          const voucher = await lazyMinter.createVoucher(
+            walletAddress,
+            Math.round(Date.now() / 1000) + (60 * 60 * 24) // 1 day
+          );
           addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
         
           const content = `Wallet address ${walletAddress} added for member ${discordUserName}
