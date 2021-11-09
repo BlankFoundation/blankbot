@@ -114,9 +114,9 @@ Now go mint your BlankArt NFT!`
       } catch (error) {
         console.log(error);
         if (error.code && (error.code == 'INVALID_ARGUMENT')) {
-          errorMessage = 'Wallet address ' + walletAddress + ' invalid -- do you have a typo?';
+          var errorMessage = 'Wallet address ' + walletAddress + ' invalid -- do you have a typo?';
         } else {
-          errorMessage = error.message;
+          var errorMessage = error.message;
         }
         await interaction.reply(
           { content: "Error: " + errorMessage,
