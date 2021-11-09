@@ -1,5 +1,5 @@
 export default {
-  "network": "ropsten",
+  "network": "rinkeby",
   "clientId": "test",
   "guildId": "test",
   "infuraProjectId": "test",
