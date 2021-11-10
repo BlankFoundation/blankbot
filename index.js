@@ -34,8 +34,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 client.on('guildMemberUpdate', async(oldMember, newMember) => {
   // check if the member was updated with the "member" role
-  if ((!oldMember.roles.cache.some(role => role.name === "member")) && (
-      newMember.roles.cache.some(role => role.name === "member"))) {
+  if ((!oldMember.roles.cache.some(role => role.name === "Member")) && (
+      newMember.roles.cache.some(role => role.name === "Member"))) {
       const channel = client.channels.cache.find(channel => channel.name === config.welcomeChannel);
       channel.send(`Applicant ${newMember} has been promoted to Blank member! Welcome! Please head over to #whitelist channel for instructions on how to mint your Blank NFTs.`);
   }
