@@ -72,7 +72,7 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
 }
 
 const whitelist = async (interaction) => {
-  if (interaction.member.roles.cache.some(role => role.name === "member")) {
+  if (interaction.member.roles.cache.some(role => role.name === "Member")) {
     const discordUserName = interaction.user.username;
     const discordUserId = interaction.user.id;
     const walletAddress = interaction.options.getString('address');
