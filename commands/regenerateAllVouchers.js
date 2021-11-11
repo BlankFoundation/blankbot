@@ -55,7 +55,8 @@ const regenerateAllVouchers = async (interaction) => {
     const allRecords = getAllRecords();
     var successfullyUpdated = []
     var errors = []
-    for (i = 0; i < allRecords.length; i++) {
+    for (var i = 0; i < allRecords.length; i++) {
+      console.log('made it here');
       try {
           var walletAddress = allRecords[i]['fields']['WalletAddress']
           var recordId = allRecords[i]['id']
