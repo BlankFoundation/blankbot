@@ -13,7 +13,15 @@ const commands = [
     .addStringOption(option =>
       option.setName('address')
         .setDescription('Address of the Metamask wallet to add to the whitelist')
-        .setRequired(true))
+        .setRequired(true)),
+  new SlashCommandBuilder().setName('regenerate-all-vouchers').setDescription('Regenerates all vouchers for the whitelist. Admin only.'),
+  new SlashCommandBuilder()
+    .setName('regenerate-voucher')
+    .setDescription('Regenerates a voucher for a specific discord username')
+    .addStringOption(option =>
+      option.setName('username')
+        .setDescription('Discord user handle for whom to reset voucher')
+        .setRequired(true)),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.discordToken);
