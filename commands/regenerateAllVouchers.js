@@ -35,14 +35,10 @@ async function getAllRecords() {
  return allRecords;
 }
 
-function updateRecordWithNewVoucher(recordId, voucher) {
-  database("Whitelist").update({"records": [
-    {
-      "id": recordId,
-      "fields": {
-        "Voucher": voucher,
-      }
-    }]}, function(err, _record) {
+async function updateRecordWithNewVoucher(recordId, voucher) {
+  await database('Whitelist').update(recordId, {
+    "Voucher": voucher,
+  }, function(err, record) {
     if (err) {
       console.error(err);
       return;
@@ -52,11 +48,11 @@ function updateRecordWithNewVoucher(recordId, voucher) {
 
 const regenerateAllVouchers = async (interaction) => {
   if (interaction.member.roles.cache.some(role => role.name === "Council")) {
-    const allRecords = getAllRecords();
+    const allRecords = await getAllRecords();
     var successfullyUpdated = []
     var errors = []
     for (var i = 0; i < allRecords.length; i++) {
-      console.log('made it here');
+
       try {
           var walletAddress = allRecords[i]['fields']['WalletAddress']
           var recordId = allRecords[i]['id']
@@ -64,7 +60,7 @@ const regenerateAllVouchers = async (interaction) => {
             walletAddress,
             Math.round(Date.now() / 1000) + (60 * 10) // 10 minutes for testing //(60 * 60 * 24) // 1 day
           );
-          updateRecordWithNewVoucher(recordId, JSON.stringify(voucher));
+          await updateRecordWithNewVoucher(recordId, JSON.stringify(voucher));
           successfullyUpdated.push(allRecords[i]['fields']['DiscordUserName']);
         } catch (error) {
           console.log(error);

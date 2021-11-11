@@ -38,14 +38,10 @@ async function getDiscordUserNameRecords(value) {
  return matchingRecords;
 }
 
-function updateRecordWithNewVoucher(recordId, voucher) {
-  database("Whitelist").update({"records": [
-    {
-      "id": recordId,
-      "fields": {
-        "Voucher": voucher,
-      }
-    }]}, function(err, _record) {
+async function updateRecordWithNewVoucher(recordId, voucher) {
+  await database('Whitelist').update(recordId, {
+    "Voucher": voucher,
+  }, function(err, record) {
     if (err) {
       console.error(err);
       return;
@@ -65,7 +61,7 @@ const regenerateVoucher = async (interaction) => {
             walletAddress,
             Math.round(Date.now() / 1000) + (60 * 10) // 10 minutes for testing //(60 * 60 * 24) // 1 day
           );
-          updateRecordWithNewVoucher(recordId, JSON.stringify(voucher));
+          await updateRecordWithNewVoucher(recordId, JSON.stringify(voucher));
 
 
           await interaction.reply({
