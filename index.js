@@ -47,7 +47,7 @@ client.on('interactionCreate', async interaction => {
   if (commandName === 'regenerate-voucher') {
     var nameToUse = 'regenerateVoucher';
   } else if (commandName === 'regenerate-all-vouchers') {
-    var nameToUse = 'regenerate-all-vouchers';
+    var nameToUse = 'regenerateAllVouchers';
   } else {
     var nameToUse = commands[commandName]
   }
