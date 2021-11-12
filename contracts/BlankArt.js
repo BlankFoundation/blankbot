@@ -1,6 +1,6 @@
 const BlankArt = {
   network: "rinkeby",
-  address: "0x305Cd43e9bc8d9A65d3fa5ddE4a1353738654dEd",
+  address: "0x29E63B96F88B0BB1aAFBBdBF90b30c4C6ff896dE",
   abi: [
     {
       "type": "constructor",
@@ -100,27 +100,50 @@ const BlankArt = {
       "anonymous": false
     },
     {
-      "name": "MemberAdded",
+      "name": "Initialized",
       "type": "event",
       "inputs": [
         {
-          "name": "member",
+          "name": "controller",
           "type": "address",
           "indexed": false,
           "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "name": "MemberRevoked",
-      "type": "event",
-      "inputs": [
+        },
         {
-          "name": "member",
-          "type": "address",
+          "name": "baseURI",
+          "type": "string",
           "indexed": false,
-          "internalType": "address"
+          "internalType": "string"
+        },
+        {
+          "name": "mintPrice",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxTokenSupply",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "foundationSalePercentage",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        },
+        {
+          "name": "publicMint",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
         }
       ],
       "anonymous": false
