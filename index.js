@@ -43,11 +43,14 @@ client.on('guildMemberUpdate', async(oldMember, newMember) => {
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
-
-  if (commands[interaction.commandName]) {
+  if (interaction.commandName === 'regenerate-voucher') {
+    await commands['regenerateVoucher'](interaction)
+  } else if (interaction.commandName === 'regenerate-all-vouchers') {
+    await commands['regenerateAllVouchers'](interaction)
+  } else if (commands[interaction.commandName]) {
     await commands[interaction.commandName](interaction)
   } else {
-    commands.notFound(interaction)
+    await commands['notfound'](interaction)
   }
 });
     
