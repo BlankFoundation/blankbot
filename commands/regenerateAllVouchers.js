@@ -13,7 +13,7 @@ const provider = new ethers.providers.InfuraProvider(config.network, {
   projectId: config.infuraProjectId,
   projectSecret: config.infuraProjectSecret
 });
-const signer = new ethers.Wallet(config.foundationPrivateKey, provider);
+const signer = new ethers.Wallet(config.signingPrivateKey, provider);
 const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
 const lazyMinter = new LazyMinter({ contract, signer });
 const MAX_WHITELIST_MEMBERS = 1000;

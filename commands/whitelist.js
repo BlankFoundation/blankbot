@@ -13,7 +13,7 @@ const provider = new ethers.providers.InfuraProvider(config.network, {
   projectId: config.infuraProjectId,
   projectSecret: config.infuraProjectSecret
 });
-const signer = new ethers.Wallet(config.foundationPrivateKey, provider);
+const signer = new ethers.Wallet(config.signingPrivateKey, provider);
 const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
 const lazyMinter = new LazyMinter({ contract, signer });
 const MAX_WHITELIST_MEMBERS = 1000;
@@ -89,7 +89,7 @@ const whitelist = async (interaction) => {
         } else {
           const voucher = await lazyMinter.createVoucher(
             walletAddress,
-            Math.round(Date.now() / 1000) + (60 * 10) // 10 minutes for testing //(60 * 60 * 24) // 1 day
+            Math.round(Date.now() / 1000) + (60 * 60 * 24 * 14) // 2 weeks
           );
           addRecord(discordUserName, walletAddress, discordUserId, JSON.stringify(voucher));
         
