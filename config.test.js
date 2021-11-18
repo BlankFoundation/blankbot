@@ -7,7 +7,7 @@ export default {
   "discordToken": "test",
   "airtableKey": "test",
   "airtableId": "test",
-  "foundationPrivateKey": "test",
+  "signingPrivateKey": "test",
   "applicationChannel": 'bot-test',
   "applicationChannelId": 'test',
   "moderatorChannel": 'bot-test',

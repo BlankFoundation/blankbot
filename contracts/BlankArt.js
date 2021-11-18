@@ -1,6 +1,6 @@
 const BlankArt = {
   network: "rinkeby",
-  address: "0x29E63B96F88B0BB1aAFBBdBF90b30c4C6ff896dE",
+  address: "0x92c612A5aCF7ffeB36739E12F7b6069D74C46490",
   abi: [
     {
       "type": "constructor",
@@ -11,6 +11,11 @@ const BlankArt = {
           "internalType": "address payable"
         },
         {
+          "name": "_signer",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
           "name": "_maxTokenSupply",
           "type": "uint256",
           "internalType": "uint256"
@@ -19,6 +24,11 @@ const BlankArt = {
           "name": "baseURI",
           "type": "string",
           "internalType": "string"
+        },
+        {
+          "name": "_royaltyBPS",
+          "type": "uint16",
+          "internalType": "uint16"
         }
       ],
       "stateMutability": "nonpayable"
@@ -87,6 +97,25 @@ const BlankArt = {
       "anonymous": false
     },
     {
+      "name": "BlankRoyaltySet",
+      "type": "event",
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "bps",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "name": "FoundationAddressUpdated",
       "type": "event",
       "inputs": [
@@ -110,6 +139,12 @@ const BlankArt = {
           "internalType": "address"
         },
         {
+          "name": "signer",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
           "name": "baseURI",
           "type": "string",
           "indexed": false,
@@ -123,12 +158,6 @@ const BlankArt = {
         },
         {
           "name": "maxTokenSupply",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "foundationSalePercentage",
           "type": "uint256",
           "indexed": false,
           "internalType": "uint256"
@@ -174,13 +203,38 @@ const BlankArt = {
       "anonymous": false
     },
     {
-      "name": "TokenUriLocked",
+      "name": "OwnershipTransferred",
       "type": "event",
       "inputs": [
         {
-          "name": "tokenId",
-          "type": "uint256",
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "name": "PermanentURI",
+      "type": "event",
+      "inputs": [
+        {
+          "name": "_value",
+          "type": "string",
           "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "_id",
+          "type": "uint256",
+          "indexed": true,
           "internalType": "uint256"
         }
       ],
@@ -212,6 +266,25 @@ const BlankArt = {
       "anonymous": false
     },
     {
+      "name": "VoucherSignersUpdated",
+      "type": "event",
+      "inputs": [
+        {
+          "name": "foundationAddress",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
       "name": "active",
       "type": "function",
       "inputs": [],
@@ -232,6 +305,19 @@ const BlankArt = {
           "name": "baseURI",
           "type": "string",
           "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "addVoucherSigner",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "newVoucherSigner",
+          "type": "address",
+          "internalType": "address"
         }
       ],
       "outputs": [],
@@ -288,6 +374,24 @@ const BlankArt = {
       "stateMutability": "view"
     },
     {
+      "name": "blankRoyalty",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "recipient",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "bps",
+          "type": "uint16",
+          "internalType": "uint16"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
       "name": "foundationAddress",
       "type": "function",
       "inputs": [],
@@ -296,19 +400,6 @@ const BlankArt = {
           "name": "",
           "type": "address",
           "internalType": "address payable"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "name": "foundationSalePercentage",
-      "type": "function",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
         }
       ],
       "stateMutability": "view"
@@ -473,6 +564,19 @@ const BlankArt = {
       "stateMutability": "view"
     },
     {
+      "name": "owner",
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
       "name": "ownerOf",
       "type": "function",
       "inputs": [
@@ -556,6 +660,55 @@ const BlankArt = {
       "stateMutability": "payable"
     },
     {
+      "name": "removeVoucherSigner",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "oldVoucherSigner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "renounceOwnership",
+      "type": "function",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "royaltyInfo",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "salePrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "royaltyAmount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
       "name": "safeTransferFrom",
       "type": "function",
       "inputs": [
@@ -619,6 +772,24 @@ const BlankArt = {
           "name": "approved",
           "type": "bool",
           "internalType": "bool"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "setDefaultRoyalty",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "bps",
+          "type": "uint16",
+          "internalType": "uint16"
         }
       ],
       "outputs": [],
@@ -739,6 +910,19 @@ const BlankArt = {
           "name": "tokenId",
           "type": "uint256",
           "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "name": "transferOwnership",
+      "type": "function",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address",
+          "internalType": "address"
         }
       ],
       "outputs": [],
