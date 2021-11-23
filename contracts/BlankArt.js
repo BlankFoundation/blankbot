@@ -1,6 +1,6 @@
 const BlankArt = {
   network: "rinkeby",
-  address: "0x92c612A5aCF7ffeB36739E12F7b6069D74C46490",
+  address: "0x2e7832c111f2c1b6953E8fB1Eb3471fd9f48a2cd",
   abi: [
     {
       "type": "constructor",
@@ -385,8 +385,8 @@ const BlankArt = {
         },
         {
           "name": "bps",
-          "type": "uint16",
-          "internalType": "uint16"
+          "type": "uint24",
+          "internalType": "uint24"
         }
       ],
       "stateMutability": "view"
