@@ -1,6 +1,6 @@
 const BlankArt = {
-  network: "rinkeby",
-  address: "0x2e7832c111f2c1b6953E8fB1Eb3471fd9f48a2cd",
+  network: "homestead",
+  address: "0x9ef14cC7C558a70FBB6480CE58042feebAA1972E",
   abi: [
     {
       "type": "constructor",
