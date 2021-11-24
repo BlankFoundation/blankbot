@@ -59,7 +59,7 @@ const regenerateVoucher = async (interaction) => {
           const recordId = discordUserNameRecords[0]['id']
           const voucher = await lazyMinter.createVoucher(
             walletAddress,
-            Math.round(Date.now() / 1000) + (60 * 10) // 10 minutes for testing //(60 * 60 * 24) // 1 day
+            Math.round(Date.now() / 1000) + (60 * 60 * 24 * 14)  // 2 weeks
           );
           await updateRecordWithNewVoucher(recordId, JSON.stringify(voucher));
 
