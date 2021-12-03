@@ -6,7 +6,7 @@ import { ethers } from 'ethers'
 
 import Airtable from 'airtable';
 
-const database = new Airtable({apiKey: config.airtableKey}).base(config.airtableId);
+const database = new Airtable({apiKey: config.airtableKey}).base(config.airtableApplicationsId);
 
 const fetchAllMessages = async (channel) => {
     let messages = [];
@@ -84,7 +84,7 @@ const reviewApplications = async (interaction) => {
             }
         }
         if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
-            let tableName = "ApplicationReview"
+            let tableName = "ReadyForPromotion"
             var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
             if (!userNamePresent) {
                 addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
