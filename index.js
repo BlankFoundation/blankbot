@@ -47,8 +47,6 @@ client.on('interactionCreate', async interaction => {
     await commands['regenerateVoucher'](interaction)
   } else if (interaction.commandName === 'regenerate-all-vouchers') {
     await commands['regenerateAllVouchers'](interaction)
-  } else if (interaction.commandName === 'review-applications') {
-    await commands['reviewApplications'](interaction)
   } else if (commands[interaction.commandName]) {
    await commands[interaction.commandName](interaction)
   } else {
