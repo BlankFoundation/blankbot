@@ -6,7 +6,7 @@ import { ethers } from 'ethers'
 
 import Airtable from 'airtable';
 
-const database = new Airtable({apiKey: config.airtableKey}).base(config.airtableApplicationsId);
+const applicationDatabase = new Airtable({apiKey: config.airtableKey}).base(config.airtableApplicationsId);
 
 const fetchAllMessages = async (channel) => {
     let messages = [];
@@ -28,7 +28,7 @@ const fetchAllMessages = async (channel) => {
 
 
 function addReviewRecord(tableName, discordUserName, applicationLink, numUniqueEmojis) {
-  database(tableName).create([
+  applicationDatabase(tableName).create([
     {
       "fields": {
         "DiscordUserName": discordUserName,
@@ -45,7 +45,7 @@ function addReviewRecord(tableName, discordUserName, applicationLink, numUniqueE
 
 async function getDiscordUserNamePresent(tableName, value) {
   let matchingRecords = [];
-  await database(tableName)
+  await applicationDatabase(tableName)
     .select({
       filterByFormula: "({DiscordUserName} = '" + value + "')"
     })
