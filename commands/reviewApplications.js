@@ -86,13 +86,13 @@ const reviewApplications = async (interaction) => {
         if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
             let tableName = "ApplicationReview"
             var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
-            if (userNamePresent) {
+            if (!userNamePresent) {
                 addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
             }
         } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
             let tableName = "CouncilContributorVoteNeeded";
             var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
-            if (userNamePresent) {
+            if (!userNamePresent) {
                 addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions);
             }
         }
