@@ -27,11 +27,12 @@ const fetchAllMessages = async (channel) => {
 }
 
 
-function addReviewRecord(tableName, discordUserName, applicationLink, numUniqueEmojis) {
+function addReviewRecord(tableName, discordUserName, discordUserId, applicationLink, numUniqueEmojis) {
   applicationDatabase(tableName).create([
     {
       "fields": {
         "DiscordUserName": discordUserName,
+        "DiscordUserId": discordUserId,
         "ApplicationLink": applicationLink,
         "NumUniqueEmojis": numUniqueEmojis,
        }
@@ -87,13 +88,15 @@ const reviewApplications = async (interaction) => {
             let tableName = "ReadyForPromotion"
             var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
             if (!userNamePresent) {
-                addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
+                addReviewRecord(tableName, reaction.message.author.username,
+                    reaction.message.author.id, reaction.message.url, uniqueMemberReactions)
             }
         } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
             let tableName = "CouncilContributorVoteNeeded";
             var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
             if (!userNamePresent) {
-                addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions);
+                addReviewRecord(tableName, reaction.message.author.username,
+                    reaction.message.author.id, reaction.message.url, uniqueMemberReactions);
             }
         }
     }
