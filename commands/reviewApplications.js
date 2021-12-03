@@ -27,24 +27,8 @@ const fetchAllMessages = async (channel) => {
 }
 
 
-function addReviewRecord(discordUserName, applicationLink, numUniqueEmojis) {
-  database("ApplicationReview").create([
-    {
-      "fields": {
-        "DiscordUserName": discordUserName,
-        "ApplicationLink": applicationLink,
-        "NumUniqueEmojis": numUniqueEmojis,
-       }
-    }], function(err, _records) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-  });
-}
-
-function addOneMissingRecord(discordUserName, applicationLink, numUniqueEmojis) {
-  database("CouncilContributorVoteNeeded").create([
+function addReviewRecord(tableName, discordUserName, applicationLink, numUniqueEmojis) {
+  database(tableName).create([
     {
       "fields": {
         "DiscordUserName": discordUserName,
@@ -100,14 +84,16 @@ const reviewApplications = async (interaction) => {
             }
         }
         if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
-            var userNamePresent = await getDiscordUserNamePresent('ApplicationReview', reaction.message.author.username);
+            let tableName = "ApplicationReview"
+            var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
             if (userNamePresent) {
-                addReviewRecord(reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
+                addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
             }
         } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
-            var userNamePresent = await getDiscordUserNamePresent('CouncilContributorVoteNeeded', reaction.message.author.username);
+            let tableName = "CouncilContributorVoteNeeded";
+            var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
             if (userNamePresent) {
-                addOneMissingRecord(reaction.message.author.username, reaction.message.url, uniqueMemberReactions);
+                addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions);
             }
         }
     }
