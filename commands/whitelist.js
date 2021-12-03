@@ -72,6 +72,9 @@ function addRecord(discordUserName, walletAddress, discordUserId, voucher) {
 }
 
 const whitelist = async (interaction) => {
+  await interaction.reply(
+      { content: 'Working on it...',
+        ephemeral: true});
   if (interaction.member.roles.cache.some(role => role.name === "Member")) {
     const discordUserName = interaction.user.username;
     const discordUserId = interaction.user.id;
@@ -83,7 +86,7 @@ const whitelist = async (interaction) => {
         // check if whitelist already has max members
         const totalAddresses = await countWalletAddresses();
         if (totalAddresses >= MAX_WHITELIST_MEMBERS) {
-          await interaction.reply(
+          await interaction.followUp(
           { content: "The whitelist is full with 1,000 addresses. The community treasury will decide what to do with the remaining blank NFTs. Your participation matters!",
             ephemeral: true});
         } else {
@@ -105,7 +108,7 @@ Now go mint your BlankArt NFT!`
                 .setStyle('LINK'),
             );
 
-          await interaction.reply({
+          await interaction.followUp({
             content: content,
             components: [row],
             ephemeral: true
@@ -118,17 +121,17 @@ Now go mint your BlankArt NFT!`
         } else {
           var errorMessage = error.message;
         }
-        await interaction.reply(
+        await interaction.followUp(
           { content: "Error: " + errorMessage,
             ephemeral: true});
       }
     } else {
-      await interaction.reply(
+      await interaction.followUp(
       { content: 'Wallet address ' + discordUserIdAddresses[0] + ' already exists for member ' + discordUserName + '. Please contact a member of our moderation team to handle this issue!',
         ephemeral: true});
     }
   } else {
-    await interaction.reply({ 
+    await interaction.followUp({
       content: "You must be a member to add your wallet address to the whitelist. Apply in the #applications channel, we'd love to have you!",
       ephemeral: true 
     });
