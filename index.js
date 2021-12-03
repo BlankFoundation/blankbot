@@ -16,30 +16,30 @@ const client = new Client({
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 })
-//
-// client.on('messageReactionAdd', async (reaction, user) => {
-//     if (reaction.message.channel.id !== config.applicationChannelId) {
-//       console.log(reaction.message.channel.name);
-//       console.log('ignoring message');
-//       return;
-//     }
-//     console.log("Checking reactions for message");
-//     try {
-//         await handleApplication(client, reaction);
-//     }
-//     catch (err) {
-//         console.log(err);
-//     }
-// });
-//
-// client.on('guildMemberUpdate', async(oldMember, newMember) => {
-//   // check if the member was updated with the "member" role
-//   if ((!oldMember.roles.cache.some(role => role.name === "Member")) && (
-//       newMember.roles.cache.some(role => role.name === "Member"))) {
-//       const channel = client.channels.cache.find(channel => channel.id === config.welcomeChannelId);
-//       channel.send(`Applicant ${newMember} has been promoted to Blank member! Welcome! Please head over to #whitelist channel for instructions on how to mint your Blank NFTs. The whitelist closes at 1000 addresses, so be sure to whitelist promptly.`);
-//   }
-// });
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (reaction.message.channel.id !== config.applicationChannelId) {
+      console.log(reaction.message.channel.name);
+      console.log('ignoring message');
+      return;
+    }
+    console.log("Checking reactions for message");
+    try {
+        await handleApplication(client, reaction);
+    }
+    catch (err) {
+        console.log(err);
+    }
+});
+
+client.on('guildMemberUpdate', async(oldMember, newMember) => {
+  // check if the member was updated with the "member" role
+  if ((!oldMember.roles.cache.some(role => role.name === "Member")) && (
+      newMember.roles.cache.some(role => role.name === "Member"))) {
+      const channel = client.channels.cache.find(channel => channel.id === config.welcomeChannelId);
+      channel.send(`Applicant ${newMember} has been promoted to Blank member! Welcome! Please head over to #whitelist channel for instructions on how to mint your Blank NFTs. The whitelist closes at 1000 addresses, so be sure to whitelist promptly.`);
+  }
+});
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
@@ -49,8 +49,8 @@ client.on('interactionCreate', async interaction => {
     await commands['regenerateAllVouchers'](interaction)
   } else if (interaction.commandName === 'review-applications') {
     await commands['reviewApplications'](interaction)
-  //} else if (commands[interaction.commandName]) {
-  //  await commands[interaction.commandName](interaction)
+  } else if (commands[interaction.commandName]) {
+   await commands[interaction.commandName](interaction)
   } else {
     await commands['notfound'](interaction)
   }
