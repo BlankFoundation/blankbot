@@ -15,6 +15,7 @@ const commands = [
         .setDescription('Address of the Metamask wallet to add to the whitelist')
         .setRequired(true)),
   new SlashCommandBuilder().setName('regenerate-all-vouchers').setDescription('Regenerates all vouchers for the whitelist. Admin only.'),
+  new SlashCommandBuilder().setName('review-applications').setDescription('Regenerates all applications yet to review for the whitelist. Admin only.'),
   new SlashCommandBuilder()
     .setName('regenerate-voucher')
     .setDescription('Regenerates a voucher for a specific discord username')
