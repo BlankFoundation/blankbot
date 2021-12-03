@@ -43,11 +43,11 @@ function addReviewRecord(tableName, discordUserName, applicationLink, numUniqueE
   });
 }
 
-async function getDiscordUserNamePresent(tableName, value) {
+async function getDiscordUserIdPresent(tableName, value) {
   let matchingRecords = [];
   await applicationDatabase(tableName)
     .select({
-      filterByFormula: "({DiscordUserName} = '" + value + "')"
+      filterByFormula: "({DiscordUserId} = '" + value + "')"
     })
     .eachPage(
       function page(records, fetchNextPage) {
@@ -85,13 +85,13 @@ const reviewApplications = async (interaction) => {
         }
         if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
             let tableName = "ReadyForPromotion"
-            var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
+            var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
             if (!userNamePresent) {
                 addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions)
             }
         } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
             let tableName = "CouncilContributorVoteNeeded";
-            var userNamePresent = await getDiscordUserNamePresent(tableName, reaction.message.author.username);
+            var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
             if (!userNamePresent) {
                 addReviewRecord(tableName, reaction.message.author.username, reaction.message.url, uniqueMemberReactions);
             }
