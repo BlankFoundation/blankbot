@@ -27,7 +27,14 @@ const fetchAllMessages = async (channel) => {
 }
 
 
-function addReviewRecord(tableName, discordUserName, discordUserId, applicationLink, numUniqueEmojis) {
+function addReviewRecord(
+    tableName,
+    discordUserName,
+    discordUserId,
+    applicationLink,
+    numUniqueEmojis,
+    applicationTime
+) {
   applicationDatabase(tableName).create([
     {
       "fields": {
@@ -35,6 +42,7 @@ function addReviewRecord(tableName, discordUserName, discordUserId, applicationL
         "DiscordUserId": discordUserId,
         "ApplicationLink": applicationLink,
         "NumUniqueEmojis": numUniqueEmojis,
+        "ApplicationTime": applicationTime,
        }
     }], function(err, _records) {
     if (err) {
@@ -83,20 +91,22 @@ const reviewApplications = async (interaction) => {
                 var uniqueMemberReactions = whetherToHandle['uniqueMemberReactions'];
                 var councilMemberReaction = whetherToHandle['hasCouncilMemberReaction'];
             }
-        }
-        if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
-            let tableName = "ReadyForPromotion"
-            var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
-            if (!userNamePresent) {
-                addReviewRecord(tableName, reaction.message.author.username,
-                    reaction.message.author.id, reaction.message.url, uniqueMemberReactions)
-            }
-        } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
-            let tableName = "CouncilContributorVoteNeeded";
-            var userNamePresent = await getDiscordUserIdPresent(tableName, reaction.message.author.id);
-            if (!userNamePresent) {
-                addReviewRecord(tableName, reaction.message.author.username,
-                    reaction.message.author.id, reaction.message.url, uniqueMemberReactions);
+            if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (councilMemberReaction)) {
+                let tableName = "ReadyForPromotion"
+                var userNamePresent = await getDiscordUserIdPresent(tableName, message.author.id);
+                if (!userNamePresent) {
+                    addReviewRecord(tableName, message.author.username,
+                        message.author.id, message.url,
+                        uniqueMemberReactions, message.timestamp)
+                }
+            } else if ((uniqueMemberReactions >= 5) && (numDoubles < 5) && (!councilMemberReaction)) {
+                let tableName = "CouncilContributorVoteNeeded";
+                var userNamePresent = await getDiscordUserIdPresent(tableName, message.author.id);
+                if (!userNamePresent) {
+                    addReviewRecord(tableName, message.author.username,
+                        message.author.id, message.url,
+                        uniqueMemberReactions, message.timestamp);
+                }
             }
         }
     }
