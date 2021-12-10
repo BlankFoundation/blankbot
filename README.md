@@ -23,12 +23,14 @@ You can create your own blank dev bot in 3 steps and 30 seconds
 - [Create a New Application on discord developer portal](https://discord.com/developers/applications) with a name
 - Create a bot for the application
 - Copy bot token and oAuth clientId into config.js
+
 ![Create Bot Server](docs/img/CreateDevBot.gif)
 
 
 ## Enable Privileged Intent
 For the bot to access members on a server, discord requires a "Privileged Intent" GUILD_MEMBERSHIP
 You need enable it in the bot settings
+
 ![Enable Privileged Intent](docs/img/EnablePrivilegedIntent.gif)
 
 ## Add Dev Bot to Dev Server
