@@ -1,9 +1,9 @@
 export default {
   // discord bot settings
   "clientId": "test",
-  "guildId": "test",
   "discordToken": "test",
-  // discord channel settings
+  // other discord settings
+  "guildId": "test",
   "applicationChannel": 'bot-test',
   "applicationChannelId": 'test',
   "moderatorChannel": 'bot-test',
@@ -14,6 +14,6 @@ export default {
   "infuraProjectSecret": "test",
   "airtableKey": "test",
   "airtableId": "test",
-  "signingPrivateKey": "test",
+  "signingPrivateKey": "test", //use private key for your own metamask, used to generate signatures only
   "mintingUrl": "https://blank.foundation/mint"
 }
