@@ -37,7 +37,7 @@ client.on('guildMemberUpdate', async(oldMember, newMember) => {
   if ((!oldMember.roles.cache.some(role => role.name === "Member")) && (
       newMember.roles.cache.some(role => role.name === "Member"))) {
       const channel = client.channels.cache.find(channel => channel.id === config.welcomeChannelId);
-      channel.send(`Applicant ${newMember} has been promoted to Blank member! Welcome! Please head over to #whitelist channel for instructions on how to mint your Blank NFTs. The whitelist closes at 1000 addresses, so be sure to whitelist promptly.`);
+      channel.send(`Applicant ${newMember} has been promoted to Blank member! Welcome! Feel free to look around, ask questions in #no-silly-questions and browse the resources in #links!`);
   }
 });
 
