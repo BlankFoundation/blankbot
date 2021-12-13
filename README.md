@@ -13,19 +13,26 @@ npm install
 cp config.test.js config.js
 ```
 
-To develop the bot locally, you can create your own dev blank server with your own dev blank bot
+To develop the blank bot locally, you will need to create a:
+- development blank foundation discord server
+- development blank foundation bot
 
-## Create Dev Server
-Create your dev server instantly from [this server template](https://discord.new/xxbhaey7szrC)
 
-## Create Dev Bot
-You can create your own blank dev bot in 3 steps and 30 seconds
-- [Create a New Application on discord developer portal](https://discord.com/developers/applications) with a name
-- Create a bot for the application
-- Copy bot token and oAuth clientId into config.js
+## Prerequisites
+Go to discord settings and turn developer mode on.
+![Image 2021-12-12 at 9 36 13 PM](https://user-images.githubusercontent.com/2502947/145743785-75957609-0f12-43e0-b9b2-b7d2c838a9f2.jpg)
 
+## Create Discord Development Server
+Use the [Blank Foundation Server Template](https://discord.new/xxbhaey7szrC) to create a development blank foundation discord server.
 ![Create Bot Server](docs/img/CreateDevBot.gif)
-
+## Create Discord Development Bot
+You can create your own blank foundation development bot in 3 steps
+- [Create a New Application on discord developer portal](https://discord.com/developers/applications) with a name
+- Create a bot for the application. Go to the `Bot` section, create a bot.
+- In `config.js` add `clientId: <0AuthClientId>` which is located in the application settings.
+![Image 2021-12-12 at 9 44 51 PM](https://user-images.githubusercontent.com/2502947/145744475-a9d71ac9-f0f6-4667-94c9-304b585e4fdf.jpg)
+- In `config.js` add `"discordToken": <discordToken>` located in the application settings.
+![Image 2021-12-12 at 9 48 25 PM](https://user-images.githubusercontent.com/2502947/145744771-ac3e62cb-e4f3-4604-b6e4-322fad977716.jpg)
 
 ## Enable Privileged Intent
 For the bot to access members on a server, discord requires a "Privileged Intent" GUILD_MEMBERSHIP
