@@ -3,9 +3,9 @@ const whoami = async (interaction) => {
   
 I help review member applications and also help members whitelist their wallet addresses for minting. 
 
-I also like playing ping pong!`
+I also like playing ping pong!`;
 
-  await interaction.reply({ content: botResponse, ephemeral: true});
-}
+  await interaction.reply({ content: botResponse, ephemeral: true });
+};
 
 export default whoami;
