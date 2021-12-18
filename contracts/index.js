@@ -1,1 +1,1 @@
-export { default as BlankArt } from './BlankArt.js'
+export { default as BlankArt } from "./BlankArt.js";
