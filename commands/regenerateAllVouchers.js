@@ -6,7 +6,6 @@ import { LazyMinter } from "../lib/index.js";
 import { ethers } from "ethers";
 
 import Airtable from "airtable";
-import { MessageActionRow, MessageButton } from "discord.js";
 
 const database = new Airtable({ apiKey: config.airtableKey }).base(
   config.airtableId
@@ -18,7 +17,6 @@ const provider = new ethers.providers.InfuraProvider(config.network, {
 const signer = new ethers.Wallet(config.signingPrivateKey, provider);
 const contract = new ethers.Contract(BlankArt.address, BlankArt.abi, provider);
 const lazyMinter = new LazyMinter({ contract, signer });
-const MAX_WHITELIST_MEMBERS = 1000;
 
 async function getAllRecords() {
   let allRecords = [];
@@ -43,7 +41,7 @@ async function updateRecordWithNewVoucher(recordId, voucher) {
     {
       Voucher: voucher,
     },
-    function (err, record) {
+    function (err) {
       if (err) {
         console.error(err);
         return;
