@@ -2,8 +2,6 @@ import { default as config } from "./config.js";
 
 import * as commands from "./commands/index.js";
 
-import { handleApplication } from "./lib/index.js";
-
 import { Client, Intents } from "discord.js";
 
 const client = new Client({
