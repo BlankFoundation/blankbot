@@ -61,6 +61,13 @@ const commands = [
       option.setName('voucher_id')
         .setDescription('The ID of the voucher to claim if multiple exist.')
         .setRequired(false)),
+  new SlashCommandBuilder()
+    .setName('redeem-voucher')
+    .setDescription('Mark a voucher as redeemed')
+    .addStringOption(option =>
+      option.setName('id')
+        .setDescription('The id of the voucher to mark as redeemed')
+        .setRequired(true)),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.discordToken);
