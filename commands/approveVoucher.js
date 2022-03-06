@@ -34,8 +34,14 @@ const approveVoucher = async (interaction) => {
         ephemeral: true
       });
     } else {
+      const user = interaction.client.users.cache.find
+        (user => user.username == data.discordUserName
+      )
+
+      user.send(`Hi ${user.username}, your voucher for ${data.count} Blank NFTs has been approved!\n\nPlease use the command /claim-voucher from anywhere in the Blank discord server to claim your voucher.`);
+
       await interaction.reply({
-        content: `Your approval of ${discordUserName} for ${blankCount} Blank NFTs has been recorded.`,
+        content: `Your approval of voucher #${voucherId} for ${data.discordUserName} for ${data.count} Blank NFTs has been recorded and the member has been notified.`,
         ephemeral: true
       });
     }

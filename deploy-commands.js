@@ -50,6 +50,17 @@ const commands = [
       option.setName('id')
         .setDescription('The id of the voucher to delete')
         .setRequired(true)),
+  new SlashCommandBuilder()
+    .setName('claim-voucher')
+    .setDescription('Claim a voucher by providing your wallet address')
+    .addStringOption(option =>
+      option.setName('wallet_address')
+        .setDescription('Your wallet address')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('voucher_id')
+        .setDescription('The ID of the voucher to claim if multiple exist.')
+        .setRequired(false)),
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.discordToken);
