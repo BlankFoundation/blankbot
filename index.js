@@ -47,6 +47,16 @@ client.on('interactionCreate', async interaction => {
     await commands['regenerateVoucher'](interaction)
   } else if (interaction.commandName === 'regenerate-all-vouchers') {
     await commands['regenerateAllVouchers'](interaction)
+  } else if (interaction.commandName === 'nominate-voucher') {
+    await commands['nominateVoucher'](interaction)
+  } else if (interaction.commandName === 'approve-voucher') {
+    await commands['approveVoucher'](interaction)
+  } else if (interaction.commandName === 'list-vouchers') {
+    await commands['listVouchers'](interaction)
+  } else if (interaction.commandName === 'claim-voucher') {
+    await commands['claimVoucher'](interaction)
+  } else if (interaction.commandName === 'delete-voucher') {
+    await commands['deleteVoucher'](interaction)
   } else if (commands[interaction.commandName]) {
    await commands[interaction.commandName](interaction)
   } else {
