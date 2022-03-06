@@ -3,7 +3,6 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { default as config } from './config.js';
 
-
 const commands = [
   new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
   new SlashCommandBuilder().setName('whoami').setDescription('Bot will introduce themselves!'),
@@ -22,6 +21,34 @@ const commands = [
     .addStringOption(option =>
       option.setName('username')
         .setDescription('Discord user handle for whom to reset voucher')
+        .setRequired(true)),
+  new SlashCommandBuilder()
+    .setName('nominate-voucher')
+    .setDescription('Nominate a Blank member to receive Blank NFTs for work completed')
+    .addStringOption(option =>
+      option.setName('username')
+        .setDescription('Discord user handle of member who did the work')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('count')
+        .setDescription('The number of Blank NFTs to award')
+        .setRequired(true)),
+  new SlashCommandBuilder()
+    .setName('list-vouchers')
+    .setDescription('List all open vouchers nominations.'),
+  new SlashCommandBuilder()
+    .setName('approve-voucher')
+    .setDescription('Provide your approval for an existing voucher nomination')
+    .addStringOption(option =>
+      option.setName('id')
+        .setDescription('The id of the voucher to approve')
+        .setRequired(true)),
+  new SlashCommandBuilder()
+    .setName('delete-voucher')
+    .setDescription('Delete an existing voucher nomination')
+    .addStringOption(option =>
+      option.setName('id')
+        .setDescription('The id of the voucher to delete')
         .setRequired(true)),
 ].map(command => command.toJSON());
 

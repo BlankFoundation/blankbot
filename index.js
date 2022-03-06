@@ -53,6 +53,10 @@ client.on('interactionCreate', async interaction => {
     await commands['approveVoucher'](interaction)
   } else if (interaction.commandName === 'list-vouchers') {
     await commands['listVouchers'](interaction)
+  } else if (interaction.commandName === 'claim-voucher') {
+    await commands['claimVoucher'](interaction)
+  } else if (interaction.commandName === 'delete-voucher') {
+    await commands['deleteVoucher'](interaction)
   } else if (commands[interaction.commandName]) {
    await commands[interaction.commandName](interaction)
   } else {
