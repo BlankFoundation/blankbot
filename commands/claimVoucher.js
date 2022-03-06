@@ -40,6 +40,14 @@ const claimVoucher = async (interaction) => {
       username => info.approvals[username]
     ).length;
 
+    if (data.voucher) {
+      await interaction.reply({
+        content: `This voucher has already been claimed.`,
+        ephemeral: true
+      });
+      return;
+    }
+
     if (approvalCount >= 2) {
       const provider = new ethers.providers.InfuraProvider(config.network, {
         projectId: config.infuraProjectId,
@@ -69,10 +77,14 @@ const claimVoucher = async (interaction) => {
           ephemeral: true
         });
       } else {
-        const message = `You have claimed voucher #${data.id}. You can use /list-vouchers to verify the information is correct.`;
+        const content = `You have claimed voucher #${data.id}.
+        
+You can use /list-vouchers to verify the information is correct.
+
+Visit ${config.mintingUrl} to mint your NFTs!`;
         
         await interaction.reply({
-          content: message,
+          content: content,
           ephemeral: true
         });
       }      
