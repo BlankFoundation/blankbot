@@ -4,7 +4,7 @@ const nominateVoucher = async (interaction) => {
   if (interaction.member.roles.cache.some(role => role.name === "Council")) {
     const discordUserName = interaction.options.getString('username');
     const count = interaction.options.getString('count');
-    const { error } = await supabaseClient.from('voucher').insert({
+    const { body, error } = await supabaseClient.from('voucher').insert({
       discordUserName,
       count,
       info: {
@@ -21,7 +21,9 @@ const nominateVoucher = async (interaction) => {
       });
     } else {
       await interaction.reply({
-        content: `Your nomination of ${discordUserName} for ${count} Blank NFTs has been recorded.`,
+        content: `Your nomination of ${discordUserName} for ${count} Blank NFTs has been recorded.
+        
+Please ask another council member to approve this nomination by running \`approve-voucher ${body.id}\``,
         ephemeral: true
       });
     }
