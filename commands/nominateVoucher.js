@@ -2,7 +2,8 @@ import supabaseClient from "../lib/supabaseClient.js";
 
 const nominateVoucher = async (interaction) => {
   if (interaction.member.roles.cache.some(role => role.name === "Council")) {
-    const discordUserName = interaction.options.getString('username');
+    const discordUserName = interaction.options.getMentionable('username').user.username;
+    console.log(discordUserName)
     const count = interaction.options.getString('count');
     const { body, error } = await supabaseClient.from('voucher').insert({
       discordUserName,
@@ -14,6 +15,8 @@ const nominateVoucher = async (interaction) => {
       }
     })
 
+    console.log(body)
+
     if (error) {
       await interaction.reply({
         content: `An error occurred: ${error.message}`,
@@ -23,7 +26,7 @@ const nominateVoucher = async (interaction) => {
       await interaction.reply({
         content: `Your nomination of ${discordUserName} for ${count} Blank NFTs has been recorded.
         
-Please ask another council member to approve this nomination by running \`approve-voucher ${body.id}\``,
+Please ask another council member to approve this nomination by running \`approve-voucher ${body[0].id}\``,
         ephemeral: true
       });
     }

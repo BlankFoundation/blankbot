@@ -25,7 +25,7 @@ const commands = [
   new SlashCommandBuilder()
     .setName('nominate-voucher')
     .setDescription('Nominate a Blank member to receive Blank NFTs for work completed')
-    .addStringOption(option =>
+    .addMentionableOption(option =>
       option.setName('username')
         .setDescription('Discord user handle of member who did the work')
         .setRequired(true))
@@ -71,6 +71,16 @@ const commands = [
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(config.discordToken);
+
+// rest.get(Routes.applicationGuildCommands(config.clientId, config.guildId))
+//     .then(data => {
+//         const promises = [];
+//         for (const command of data) {
+//             const deleteUrl = `${Routes.applicationGuildCommands(config.clientId, config.guildId)}/${command.id}`;
+//             promises.push(rest.delete(deleteUrl));
+//         }
+//         return Promise.all(promises);
+//     });
 
 rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))
