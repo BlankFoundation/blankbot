@@ -40,10 +40,7 @@ const approveVoucher = async (interaction) => {
 
       user.send(`Hi ${user.username}, your voucher for ${data.count} Blank NFTs has been approved!
 
-We are planning on bulk minting Blank NFTs in the future to avoid gas costs so you may want to wait for that event.
-
-If you would rather pay the gas yourself and mint now, please use the command /claim-voucher from anywhere in the Blank discord server to claim your voucher and mint your Blank NFTs.`);
-
+Please use the command /claim-voucher from anywhere in the Blank discord server to claim your voucher and mint your Blank NFTs.`);
 
       await interaction.reply({
         content: `Your approval of voucher #${voucherId} for ${data.discordUserName} for ${data.count} Blank NFTs has been recorded and the member has been notified.`,
